@@ -12,6 +12,7 @@ const { Country } = require('./src/db')
 const PORT = process.env.PORT || 8080
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
@@ -88,19 +89,9 @@ const getAllDb = async () => {
     console.log(e)
   }
 }
-// conn.sync({ force: true }).then(() => {
-//   getAllDb()
-//   app.listen(PORT || 8080, () => {
-//     console.log(`server is running on port ${PORT}`)
-//   })
-// })
-
-getAllDb()
-
 conn.sync({ force: true }).then(() => {
-  console.log('Database synced')
-})
-
-app.listen(PORT || 8080, () => {
-  console.log(`server is running on port ${PORT}`)
+  getAllDb()
+  app.listen(PORT || 8080, () => {
+    console.log(`server is running on port ${PORT}`)
+  })
 })
