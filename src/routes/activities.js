@@ -1,10 +1,10 @@
-const express = require('express')
-const router = express.Router()
+// const express = require('express')
+// const router = express.Router()
 
-const { getActivity, postActivity } = require('../controllers')
+// const { getActivity, postActivity } = require('../controllers')
 
-router.post('/', postActivity)
+// router.post('/', postActivity)
 
-router.get('/', getActivity)
+// router.get('/', getActivity)
 
-module.exports = router
+// module.exports = router
