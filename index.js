@@ -22,7 +22,7 @@ app.use(morgan('dev'))
 
 app.use('/', routes)
 
-let API = process.env.apiAll
+let API = process.env.APIALL
 
 // const getAll = async () => {
 //   try {
