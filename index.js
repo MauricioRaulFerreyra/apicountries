@@ -1,9 +1,8 @@
-const express = require('express')
-const app = express()
+require('dotenv').config()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const axios = require('axios')
-require('dotenv').config()
+const server = require('./src/app')
 const { conn } = require('./src/db.js')
 const { Op } = require('sequelize')
 const { Country } = require('./src/db')
@@ -57,8 +56,8 @@ const getAllDb = async () => {
     console.log(e)
   }
 }
-conn.sync().then(() => {
+conn.sync({ force: true }).then(() => {
   getAllDb()
-  app.listen(process.env.PORT || 3001)
+  server.listen(process.env.PORT || 3001)
 })
 console.log('Server on port', process.env.PORT || 3001)
