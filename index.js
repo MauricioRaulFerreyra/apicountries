@@ -8,8 +8,7 @@ const morgan = require('morgan')
 const routes = require('./src/routes/index.js')
 const { conn } = require('./src/db.js')
 const { Country } = require('./src/db.js')
-const { sequelize } = require('./src/db.js')
-const port = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001
 const app = express()
 
 app.use(cors())
@@ -70,25 +69,26 @@ const getAllDb = async () => {
     console.log(e)
   }
 }
-// conn.sync({ force: true }).then(() => {
-//   getAllDb()
-//   app.listen(PORT || 8080, () => {
-//     console.log(`server is running on port ${PORT}`)
-//   })
-// })
 
-async function main () {
-  try {
-    await sequelize.sync({ force: true })
-    await sequelize.authenticate()
-    console.log('Connection has been established successfully.')
-    await getAllDb()
-    app.listen(port, () => {
-      console.log(`server is running on port ${port}`)
-    })
-  } catch (error) {
-    console.error('Unable to connect to the database:', error)
-  }
-}
+conn.sync({ force: true }).then(() => {
+  getAllDb()
+  app.listen(PORT || 8080, () => {
+    console.log(`server is running on port ${PORT}`)
+  })
+})
 
-main()
+// async function main () {
+//   try {
+//     await sequelize.sync({ force: true })
+//     await sequelize.authenticate()
+//     console.log('Connection has been established successfully.')
+//     await getAllDb()
+//     app.listen(port, () => {
+//       console.log(`server is running on port ${port}`)
+//     })
+//   } catch (error) {
+//     console.error('Unable to connect to the database:', error)
+//   }
+// }
+
+// main()
