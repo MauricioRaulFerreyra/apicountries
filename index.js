@@ -7,8 +7,9 @@ const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 const routes = require('./src/routes/index.js')
 const { conn } = require('./src/db.js')
-const { Country } = require('./src/db.js')
-const { authenticate } = require('./src/db.js')
+const Country = require('./src/db.js')
+const Activities = require('./src/db.js')
+const { sequelize } = require('./src/db.js')
 const PORT = process.env.PORT || 8080
 const app = express()
 
@@ -79,7 +80,8 @@ let API = process.env.apiAll
 
 async function main () {
   try {
-    await authenticate()
+    await sequelize.sync({ force: true })
+    await sequelize.authenticate()
     console.log('Connection has been established successfully.')
     app.listen(PORT || 8080, () => {
       console.log(`server is running on port ${PORT}`)
