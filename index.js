@@ -58,6 +58,6 @@ const getAllDb = async () => {
 }
 conn.sync({ force: true }).then(() => {
   getAllDb()
-  server.listen(process.env.PORT || 3001)
 })
+server.listen(process.env.PORT || 3001)
 console.log('Server on port', process.env.PORT || 3001)
