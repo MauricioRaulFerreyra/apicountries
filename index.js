@@ -88,9 +88,17 @@ const getAllDb = async () => {
     console.log(e)
   }
 }
+// conn.sync({ force: true }).then(() => {
+//   getAllDb()
+//   app.listen(PORT || 8080, () => {
+//     console.log(`server is running on port ${PORT}`)
+//   })
+// })
+
 conn.sync({ force: true }).then(() => {
   getAllDb()
-  app.listen(PORT || 8080, () => {
-    console.log(`server is running on port ${PORT}`)
-  })
+})
+
+app.listen(PORT || 8080, () => {
+  console.log(`server is running on port ${PORT}`)
 })
