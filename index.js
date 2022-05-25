@@ -7,10 +7,9 @@ const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 const routes = require('./src/routes/index.js')
 const { conn } = require('./src/db.js')
-const Country = require('./src/db.js')
-const Activities = require('./src/db.js')
+const { Country } = require('./src/db.js')
 const { sequelize } = require('./src/db.js')
-const PORT = process.env.PORT || 8080
+const port = process.env.PORT || 3001
 const app = express()
 
 app.use(cors())
@@ -24,53 +23,53 @@ app.use('/', routes)
 
 let API = process.env.APIALL
 
-// const getAll = async () => {
-//   try {
-//     let response = await axios(API)
-//     response = response.data.map(res => {
-//       return {
-//         id: res.cca3,
-//         name: res.name.common && res.name.common,
-//         image: res.flags && res.flags.map(flag => flag),
-//         continent: res.continents && res.continents.map(el => el),
-//         capital: res.capital ? res.capital.map(el => el) : ['no data'],
-//         subregion: res.subregion,
-//         area: res.area,
-//         population: res.population
-//       }
-//     })
+const getAll = async () => {
+  try {
+    let response = await axios(API)
+    response = response.data.map(res => {
+      return {
+        id: res.cca3,
+        name: res.name.common && res.name.common,
+        image: res.flags && res.flags.map(flag => flag),
+        continent: res.continents && res.continents.map(el => el),
+        capital: res.capital ? res.capital.map(el => el) : ['no data'],
+        subregion: res.subregion,
+        area: res.area,
+        population: res.population
+      }
+    })
 
-//     return response
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
+    return response
+  } catch (err) {
+    console.log(err)
+  }
+}
 
-// const getAllDb = async () => {
-//   try {
-//     let response = await getAll()
-//     response.map(el => {
-//       Country.findOrCreate({
-//         where: { name: el.name },
-//         defaults: {
-//           id: el.id,
-//           name: el.name,
-//           image: el.image,
-//           continent: el.continent,
-//           capital: el.capital,
-//           subregion: el.subregion,
-//           area: el.area,
-//           population: el.population
-//         }
-//       })
-//     })
-//     let data = await Country.findAll()
+const getAllDb = async () => {
+  try {
+    let response = await getAll()
+    response.map(el => {
+      Country.findOrCreate({
+        where: { name: el.name },
+        defaults: {
+          id: el.id,
+          name: el.name,
+          image: el.image,
+          continent: el.continent,
+          capital: el.capital,
+          subregion: el.subregion,
+          area: el.area,
+          population: el.population
+        }
+      })
+    })
+    let data = await Country.findAll()
 
-//     return data
-//   } catch (e) {
-//     console.log(e)
-//   }
-// }
+    return data
+  } catch (e) {
+    console.log(e)
+  }
+}
 // conn.sync({ force: true }).then(() => {
 //   getAllDb()
 //   app.listen(PORT || 8080, () => {
@@ -83,8 +82,9 @@ async function main () {
     await sequelize.sync({ force: true })
     await sequelize.authenticate()
     console.log('Connection has been established successfully.')
-    app.listen(PORT || 8080, () => {
-      console.log(`server is running on port ${PORT}`)
+    await getAllDb()
+    app.listen(port, () => {
+      console.log(`server is running on port ${port}`)
     })
   } catch (error) {
     console.error('Unable to connect to the database:', error)

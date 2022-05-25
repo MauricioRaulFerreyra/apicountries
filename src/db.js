@@ -4,12 +4,29 @@ const fs = require('fs')
 const path = require('path')
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
 
-const sequelize = new Sequelize('countries', `${DB_USER}`, `${DB_PASSWORD}`, {
+let url =
+  process.env.DATABASE_URL ||
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/postgres`
+let config = {
   logging: false,
-  native: false,
-  host: `${DB_HOST}`,
-  dialect: 'postgres'
-})
+  native: false
+}
+if (process.env.DATABASE_URL) {
+  config = {
+    ...config,
+    dialect: 'postgres',
+    protocol: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  }
+}
+
+const sequelize = new Sequelize(url, config)
+
 const basename = path.basename(__filename)
 
 const modelDefiners = []
