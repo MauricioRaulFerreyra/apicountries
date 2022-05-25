@@ -95,8 +95,10 @@ const getAllDb = async () => {
 //   })
 // })
 
+getAllDb()
+
 conn.sync({ force: true }).then(() => {
-  getAllDb()
+  console.log('Database synced')
 })
 
 app.listen(PORT || 8080, () => {
