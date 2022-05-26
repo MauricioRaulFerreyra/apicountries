@@ -29,6 +29,6 @@ conn.sync({ force: true }).then(() => {
   getAll()
 })
 server.set('port', process.env.PORT || 3000)
-server.listen(server.get('port'), () => {
-  console.log('Express server listening on port ' + server.get('port'))
+server.listen(process.env.PORT, () => {
+  console.log('Express server listening on port ' + process.env.PORT)
 })
