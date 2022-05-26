@@ -3,8 +3,6 @@ const server = require('./src/app.js')
 const { conn, Country } = require('./src/db.js')
 const axios = require('axios')
 
-const PORT = process.env.PORT
-
 const getAll = async () => {
   try {
     let response = await axios('https://restcountries.com/v3/all')
@@ -30,6 +28,6 @@ const getAll = async () => {
 conn.sync({ force: true }).then(() => {
   getAll()
 })
-server.listen(PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log('Express server listening on port ' + PORT)
 })
