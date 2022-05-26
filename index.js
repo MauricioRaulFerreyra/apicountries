@@ -29,7 +29,7 @@ const getAll = async () => {
 // Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
   getAll()
-  server.listen(PORT, () => {
-    console.log('Express server listening on port ' + PORT)
-  })
+})
+server.listen(PORT, () => {
+  console.log('Express server listening on port ' + PORT)
 })
