@@ -1,26 +1,13 @@
-require('dotenv').config()
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const axios = require('axios')
-const express = require('express')
-const cookieParser = require('cookie-parser')
-const morgan = require('morgan')
-const routes = require('./src/routes/index.js')
+const server = require('./src/app.js')
 const { conn } = require('./src/db.js')
-const { Country } = require('./src/db.js')
-const PORT = process.env.PORT || 3001
-const app = express()
+const axios = require('axios')
+const cors = require('cors')
+require('dotenv').config()
+const { Op } = require('sequelize')
+const { Country } = require('./src/db')
+server.use(cors())
 
-app.use(cors())
-app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
-app.use(bodyParser.json({ limit: '50mb' }))
-app.use(cookieParser())
-app.use(morgan('dev'))
-
-app.use('/', routes)
-
-let API = process.env.APIALL
+let API = process.env.apiAll
 
 const getAll = async () => {
   try {
@@ -37,7 +24,7 @@ const getAll = async () => {
         population: res.population
       }
     })
-
+    //console.log(response)
     return response
   } catch (err) {
     console.log(err)
@@ -63,32 +50,17 @@ const getAllDb = async () => {
       })
     })
     let data = await Country.findAll()
-
+    //console.log(data)
     return data
   } catch (e) {
     console.log(e)
   }
 }
 
+// Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
   getAllDb()
-  app.listen(PORT || 8080, () => {
-    console.log(`server is running on port ${PORT}`)
+  server.listen(3001, () => {
+    console.log('%s listening at 3001') // eslint-disable-line no-console
   })
 })
-
-// async function main () {
-//   try {
-//     await sequelize.sync({ force: true })
-//     await sequelize.authenticate()
-//     console.log('Connection has been established successfully.')
-//     await getAllDb()
-//     app.listen(port, () => {
-//       console.log(`server is running on port ${port}`)
-//     })
-//   } catch (error) {
-//     console.error('Unable to connect to the database:', error)
-//   }
-// }
-
-// main()
