@@ -7,7 +7,7 @@ const { Op } = require('sequelize')
 const { Country } = require('./src/db')
 server.use(cors())
 
-const PORT = process.env.PORT || '8080'
+const PORT = process.env.PORT
 
 let API = process.env.apiAll
 
