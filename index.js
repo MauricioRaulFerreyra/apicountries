@@ -7,7 +7,7 @@ const { Op } = require('sequelize')
 const { Country } = require('./src/db')
 server.use(cors())
 
-const PORT = process.env.PORT || '8080'
+const PORT = process.env.PORT
 
 let API = process.env.apiAll
 
@@ -63,10 +63,6 @@ const getAllDb = async () => {
 conn.sync({ force: true }).then(() => {
   getAllDb()
   server.listen(PORT, function () {
-    console.log(
-      'Express server listening on port %d in %s mode',
-      this.address().port,
-      server.settings.env
-    )
+    console.log('Express server listening on port ' + PORT)
   })
 })
