@@ -62,7 +62,7 @@ const getAllDb = async () => {
 // Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
   getAllDb()
-  server.listen(process.env.PORT || 3000, function () {
+  server.listen(PORT || 3000, function () {
     console.log(
       'Express server listening on port %d in %s mode',
       this.address().port,
