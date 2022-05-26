@@ -6,7 +6,8 @@ const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
 
 let url =
   process.env.DATABASE_URL ||
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/postgres`
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/countries`
+
 let config = {
   logging: false,
   native: false
@@ -14,8 +15,8 @@ let config = {
 if (process.env.DATABASE_URL) {
   config = {
     ...config,
-    // dialect: 'postgres',
-    // protocol: 'postgres',
+    dialect: 'postgres',
+    protocol: 'postgres',
     dialectOptions: {
       ssl: {
         require: true,
