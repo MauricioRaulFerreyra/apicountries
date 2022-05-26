@@ -28,7 +28,7 @@ const getAll = async () => {
 conn.sync({ force: true }).then(() => {
   getAll()
   server.set('port', process.env.PORT || 3000)
-  server.listen(process.env.PORT, () => {
-    console.log('Express server listening on port ' + process.env.PORT)
+  server.listen(process.env.PORT || 3000, () => {
+    console.log('Express server listening on port ' + process.env.PORT || 3000)
   })
 })
