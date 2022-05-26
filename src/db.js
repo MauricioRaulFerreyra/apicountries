@@ -3,15 +3,21 @@ const { pool } = require('pg')
 const { Sequelize } = require('sequelize')
 const fs = require('fs')
 const path = require('path')
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env
+const { DB_USER, DB_PASSWORD, DB_HOST, DATABASE_URL } = process.env
 
-let sequelize = new Sequelize(`${DB_NAME}, ${DB_USER}, ${DB_PASSWORD}`, {
-  host: `${DB_HOST}`,
-  port: 5432,
-  dialect: 'postgres',
-  logging: false,
-  native: false
-})
+let sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DATABASE_URL}`,
+  {
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
+    logging: false,
+    native: false
+  }
+)
 
 const basename = path.basename(__filename)
 

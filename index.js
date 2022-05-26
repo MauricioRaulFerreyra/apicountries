@@ -27,8 +27,8 @@ const getAll = async () => {
 // Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
   getAll()
-})
-server.set('port', process.env.PORT || 3000)
-server.listen(process.env.PORT, () => {
-  console.log('Express server listening on port ' + process.env.PORT)
+  server.set('port', process.env.PORT || 3000)
+  server.listen(process.env.PORT, () => {
+    console.log('Express server listening on port ' + process.env.PORT)
+  })
 })
