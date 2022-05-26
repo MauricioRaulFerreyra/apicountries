@@ -1,6 +1,6 @@
 require('dotenv').config()
 const server = require('./src/app.js')
-const { conn, Country } = require('./src/db.js')
+const { conn, Country, authenticate } = require('./src/db.js')
 const axios = require('axios')
 
 const getAll = async () => {
@@ -26,9 +26,18 @@ const getAll = async () => {
 
 // Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
-  getAll()
-  server.set('port', process.env.PORT || 3000)
-  server.listen(process.env.PORT || 3000, () => {
-    console.log('Express server listening on port ' + process.env.PORT || 3000)
-  })
+  try {
+    authenticate().then(() => {
+      console.log('Connection has been established successfully.')
+      getAll()
+      server.set('port', process.env.PORT || 3000)
+      server.listen(process.env.PORT || 3000, () => {
+        console.log(
+          'Express server listening on port ' + process.env.PORT || 3000
+        )
+      })
+    })
+  } catch (error) {
+    console.error('Unable to connect to the database:', error)
+  }
 })
