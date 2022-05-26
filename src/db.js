@@ -7,9 +7,12 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env
 
 let sequelize =
   process.env.NODE_ENV === 'production'
-    ? new Sequelize(
-        'postgres://cvtcdieibbycfw:374778edac07055641466eaaacc4df5342f533849c76519bf4dccf3923e975b4@ec2-52-21-136-176.compute-1.amazonaws.com:5432/de55of37pgg8q9'
-      )
+    ? new Sequelize(`${DB_NAME}, ${DB_USER}, ${DB_PASSWORD}`, {
+        host: `${DB_HOST}`,
+        port: 5432,
+        dialect: 'postgres',
+        logging: false
+      })
     : new Sequelize(
         `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/countries`,
         { logging: false, native: false }
