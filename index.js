@@ -7,7 +7,7 @@ const { Op } = require('sequelize')
 const { Country } = require('./src/db')
 server.use(cors())
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 
 let API = process.env.apiAll
 
@@ -62,7 +62,11 @@ const getAllDb = async () => {
 // Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
   getAllDb()
-  server.listen(PORT, () => {
-    console.log(`%s listening at ${PORT}`) // eslint-disable-line no-console
+  server.listen(process.env.PORT || 3000, function () {
+    console.log(
+      'Express server listening on port %d in %s mode',
+      this.address().port,
+      server.settings.env
+    )
   })
 })
