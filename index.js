@@ -30,14 +30,13 @@ conn.sync({ force: true }).then(() => {
     authenticate().then(() => {
       console.log('Connection has been established successfully.')
       getAll()
-      server.set('port', process.env.PORT || 3000)
-      server.listen(process.env.PORT || 3000, () => {
-        console.log(
-          'Express server listening on port ' + process.env.PORT || 3000
-        )
-      })
     })
   } catch (error) {
     console.error('Unable to connect to the database:', error)
   }
+})
+
+server.set('port', process.env.PORT || 3000)
+server.listen(process.env.PORT || 3000, () => {
+  console.log('Express server listening on port ' + process.env.PORT || 3000)
 })
