@@ -1,5 +1,6 @@
 const { Country, Activity } = require('../db')
 const { Op } = require('sequelize')
+const { Pool } = require('../pool')
 
 module.exports = {
   getAll: function (req, res, next) {
