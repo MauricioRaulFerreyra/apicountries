@@ -14,8 +14,8 @@ let config = {
 if (process.env.DATABASE_URL) {
   config = {
     ...config,
-    dialect: 'postgres',
-    protocol: 'postgres',
+    // dialect: 'postgres',
+    // protocol: 'postgres',
     dialectOptions: {
       ssl: {
         require: true,
