@@ -28,7 +28,8 @@ let sequelize =
               require: true,
               rejectUnauthorized: false
             }
-          }
+          },
+          ssl: true
         }
       )
 
