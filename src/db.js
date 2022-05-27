@@ -15,6 +15,7 @@ let sequelize =
         {
           host: `${DB_HOST}` || 'localhost',
           dialect: 'postgres',
+          operatorsAliases: false,
           pool: {
             max: 5,
             min: 0,
@@ -25,7 +26,6 @@ let sequelize =
           native: false,
           dialectOptions: {
             ssl: {
-              require: true,
               rejectUnauthorized: false
             }
           },
