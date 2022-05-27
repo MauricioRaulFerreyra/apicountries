@@ -1,7 +1,9 @@
 require('dotenv').config()
+const cors = require('cors')
 const server = require('./src/app.js')
 const { conn, Country, authenticate } = require('./src/db.js')
 const axios = require('axios')
+server.use(cors())
 
 const getAll = async () => {
   try {
