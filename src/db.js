@@ -16,10 +16,10 @@ let sequelize =
           host: `${DB_HOST}` || 'localhost',
           dialect: 'postgres',
           pool: {
-            max: 100,
+            max: 5,
             min: 0,
-            idle: 200000,
-            acquire: 1000000
+            idle: 30000,
+            acquire: 10000
           },
           logging: false,
           native: false,
