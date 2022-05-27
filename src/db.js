@@ -1,55 +1,16 @@
 require('dotenv').config()
-const { pool } = require('pg')
 const { Sequelize } = require('sequelize')
 const fs = require('fs')
 const path = require('path')
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env
 
-let sequelize =
-  process.env.NODE_ENV === 'production'
-    ? new Sequelize(process.env.DATABASE_URL)
-    : new Sequelize(
-        `${DB_NAME}` || 'countries',
-        `${DB_USER}` || 'postgres',
-        `${DB_PASSWORD}` || 'postgres',
-        {
-          host: `${DB_HOST}` || 'localhost',
-          dialect: 'postgres',
-          pool: {
-            max: 5,
-            min: 0,
-            idle: 30000,
-            acquire: 10000
-          },
-          logging: false,
-          native: false,
-          dialectOptions: {
-            ssl: {
-              rejectUnauthorized: false
-            }
-          },
-          ssl: true
-        }
-      )
-
-// let sequelize = new Sequelize(
-//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}`,
-//   {
-//     dialectOptions: {
-//       ssl: {
-//         rejectUnauthorized: false
-//       }
-//     },
-//     logging: false,
-//     native: false
-//   }
-// )
+let sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres'
+})
 
 const basename = path.basename(__filename)
 
 const modelDefiners = []
 
-// Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
 fs.readdirSync(path.join(__dirname, '/models'))
   .filter(
     file =>

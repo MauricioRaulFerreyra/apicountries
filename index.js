@@ -5,6 +5,8 @@ const { conn, Country, authenticate } = require('./src/db.js')
 const axios = require('axios')
 server.use(cors())
 
+const PORT = process.env.PORT || 3000
+
 const getAll = async () => {
   try {
     let response = await axios('https://restcountries.com/v3/all')
@@ -33,11 +35,9 @@ const ejecutar = async () => {
     await authenticate()
     console.log('Database synced!')
     await getAll()
-    server.set('port', process.env.PORT || 3000)
-    server.listen(process.env.PORT || 3000, () => {
-      console.log(
-        'Express server listening on port ' + process.env.PORT || 3000
-      )
+    server.set('port', PORT)
+    server.listen(PORT, () => {
+      console.log('Express server listening on port ' + PORT)
     })
   } catch (err) {
     console.log(err)
