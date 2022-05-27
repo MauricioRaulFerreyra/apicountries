@@ -31,17 +31,16 @@ const getAll = async () => {
 // Syncing all the models at once.
 const ejecutar = async () => {
   try {
-    await conn.sync({ force: true })
+    await conn.sync({ alter: true })
     await authenticate()
     console.log('Database synced!')
     await getAll()
-    server.set('port', PORT)
-    server.listen(PORT, () => {
-      console.log('Express server listening on port ' + PORT)
-    })
   } catch (err) {
     console.log(err)
   }
 }
-
 ejecutar()
+server.set('port', PORT)
+server.listen(PORT, () => {
+  console.log('Express server listening on port ' + PORT)
+})
