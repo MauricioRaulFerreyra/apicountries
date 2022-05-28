@@ -10,6 +10,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=12.18.3",
+    "npm": ">=6.14.6"
+  },
   "dependencies": {
     "axios": "^0.26.0",
     "cookie-parser": "^1.4.5",
@@ -24,6 +28,8 @@
     "nodemon": "^2.0.16",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.3.5",
+    "npm": "^7.24.2",
+    "npm-upgrade": "^3.1.0"
   }
 }

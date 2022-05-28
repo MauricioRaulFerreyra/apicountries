@@ -1,16 +1,17 @@
 require('dotenv').config()
 const cors = require('cors')
 const server = require('./src/app.js')
-const { conn, Country, authenticate } = require('./src/db.js')
-const axios = require('axios')
+const { conn, Country, Activity } = require('./src/db.js')
+const axios = require('axios').default
 server.use(cors())
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 
-const getAll = async () => {
+const dataInfo = async () => {
   try {
-    let response = await axios('https://restcountries.com/v3/all')
-    response = response.data.map(res => {
+    const info = await axios.get('https://restcountries.com/v3/all')
+
+    const data = await info.data.map(el => {
       return {
         id: res.cca3,
         name: res.name.common && res.name.common,
@@ -22,25 +23,28 @@ const getAll = async () => {
         population: res.population
       }
     })
-    response = await Country.bulkCreate(response)
-  } catch (err) {
-    console.log(err)
+
+    return data
+  } catch (error) {
+    console.log(error)
   }
 }
 
-// Syncing all the models at once.
-const ejecutar = async () => {
+;(async () => {
+  await conn.sync({ force: true })
+
+  const info = await dataInfo() //info de la api
+
   try {
-    await conn.sync({ force: true })
-    await authenticate()
-    console.log('Database synced!')
-    await getAll()
-    server.set('port', PORT)
-    server.listen(PORT, () => {
-      console.log('Express server listening on port ' + PORT)
-    })
-  } catch (err) {
-    console.log(err)
+    const data = await Country.findAll() // data de la tabla
+    if (!data.length) {
+      await Country.bulkCreate(info) // llena la Db
+    }
+  } catch (error) {
+    console.log(error)
   }
-}
-ejecutar()
+
+  server.listen(PORT, () => {
+    console.log('%s listening at ', PORT) // eslint-disable-line no-console
+  })
+})()
