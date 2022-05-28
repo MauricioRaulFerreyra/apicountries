@@ -10,7 +10,6 @@ let sequelize = new Sequelize(DATABASE_URL, {
   native: false,
   dialectOptions: {
     ssl: {
-      require: true,
       rejectUnauthorized: false
     }
   }
