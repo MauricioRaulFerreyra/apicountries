@@ -11,7 +11,7 @@ const dataInfo = async () => {
   try {
     const info = await axios.get('https://restcountries.com/v3/all')
 
-    const data = await info.data.map(el => {
+    const data = await info.data.map(res => {
       return {
         id: res.cca3,
         name: res.name.common && res.name.common,
