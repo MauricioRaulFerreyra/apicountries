@@ -1,11 +1,12 @@
-require('dotenv').config()
+const dotnev = require('dotenv')
 const cors = require('cors')
 const server = require('./src/app.js')
 const { conn, Country, Activity } = require('./src/db.js')
 const axios = require('axios').default
+dotnev.config()
 server.use(cors())
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 
 const dataInfo = async () => {
   try {
@@ -30,7 +31,7 @@ const dataInfo = async () => {
   }
 }
 
-;(async () => {
+(async () => {
   await conn.sync({ force: true })
 
   const info = await dataInfo() //info de la api
