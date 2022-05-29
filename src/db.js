@@ -2,24 +2,29 @@ require('dotenv').config()
 const { Sequelize } = require('sequelize')
 const fs = require('fs')
 const path = require('path')
-const { DATABASE_URL } = process.env
 
-let sequelize = new Sequelize(DATABASE_URL, {
-  dialect: 'postgres',
-  logging: false,
-  native: false
+
+let sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
 })
 
-const basename = path.basename(__filename)(() =>
-  sequelize
-    .authenticate()
-    .then(() => {
-      console.log('Connection has been established successfully.')
-    })
-    .catch(err => {
-      console.error('Unable to connect to the database:', err)
-    })
-)()
+  (() =>
+    sequelize
+      .authenticate()
+      .then(() => {
+        console.log('Connection has been established successfully.')
+      })
+      .catch(err => {
+        console.error('Unable to connect to the database:', err)
+      })
+  )()
+
+const basename = path.basename(__filename)
 
 const modelDefiners = []
 
