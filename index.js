@@ -6,7 +6,7 @@ const axios = require('axios').default
 dotnev.config()
 server.use(cors())
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 
 const dataInfo = async () => {
   try {
@@ -45,7 +45,7 @@ const dataInfo = async () => {
     console.log(error)
   }
 
-  server.listen(PORT, () => {
-    console.log('%s listening at ', PORT) // eslint-disable-line no-console
+  server.listen(PORT || 3000, () => {
+    console.log('%s listening at ', PORT || 3000) // eslint-disable-line no-console
   })
 })()
