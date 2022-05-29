@@ -7,12 +7,7 @@ const { DATABASE_URL } = process.env
 let sequelize = new Sequelize(DATABASE_URL, {
   dialect: 'postgres',
   logging: false,
-  native: false,
-  dialectOptions: {
-    ssl: {
-      rejectUnauthorized: false
-    }
-  }
+  native: false
 })
 
 const basename = path.basename(__filename)(() =>
