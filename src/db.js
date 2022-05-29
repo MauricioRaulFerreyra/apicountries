@@ -2,19 +2,28 @@ require('dotenv').config()
 const { Sequelize } = require('sequelize')
 const fs = require('fs')
 const path = require('path')
+const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
 
+let url = process.env.DATABASE_URL || `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`
 
-let sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
+let config = {
   logging: false,
-  native: false,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
+  native: false
+}
+if (process.env.DATABASE_URL) {
+  config = {
+    ...config,
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
     }
   }
-})
+}
+
+const sequelize = new Sequelize(url, config)
 
 sequelize
   .authenticate()
