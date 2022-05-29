@@ -16,10 +16,10 @@ const dataInfo = async () => {
       return {
         id: res.cca3,
         name: res.name.common && res.name.common,
-        image: res.flags[1],
-        continent: res.continents && res.continents.toString(),
-        capital: res.capital ? res.capital[0] : "Capital not found",
-        subregion: res.subregion ? res.subregion : "Subregion not found",
+        image: res.flags && res.flags.map(flag => flag),
+        continent: res.continents && res.continents.map(el => el),
+        capital: res.capital ? res.capital.map(el => el) : ['no data'],
+        subregion: res.subregion,
         area: res.area,
         population: res.population
       }
