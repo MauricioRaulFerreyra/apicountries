@@ -4,18 +4,42 @@ const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 
-const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/countries`,
-  {
-    logging: false, // set to console.log to see the raw SQL queries
-    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-  }
-);
+let url =
+  process.env.DATABASE_URL ||
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
+
+let config = {
+  logging: false,
+  native: false,
+};
+if (process.env.DATABASE_URL) {
+  config = {
+    ...config,
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  };
+}
+
+const sequelize = new Sequelize(url, config);
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
 
-// Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
 fs.readdirSync(path.join(__dirname, "/models"))
   .filter(
     (file) =>
@@ -43,9 +67,12 @@ const { Country, Activity } = sequelize.models;
 // Product.hasMany(Reviews);
 Country.belongsToMany(Activity, { through: "country_activity" });
 
+Country.belongsToMany(Activity, { through: "country_activity" });
+
 Activity.belongsToMany(Country, { through: "country_activity" });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
   conn: sequelize, // para importart la conexión { conn } = require('./db.js');
+  authenticate: () => sequelize.authenticate(),
 };
