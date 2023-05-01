@@ -67,8 +67,6 @@ const { Country, Activity } = sequelize.models;
 // Product.hasMany(Reviews);
 Country.belongsToMany(Activity, { through: "country_activity" });
 
-Country.belongsToMany(Activity, { through: "country_activity" });
-
 Activity.belongsToMany(Country, { through: "country_activity" });
 
 module.exports = {
