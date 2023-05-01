@@ -1,5 +1,4 @@
-// const { Country, Activity } = require('../db')
-const { Country, Activity } = require("../db-pool.js");
+const { Country, Activity } = require("../db");
 const { Op } = require("sequelize");
 
 module.exports = {
