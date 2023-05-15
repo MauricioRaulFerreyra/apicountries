@@ -52,7 +52,7 @@ const countriesTableLoad = async () => {
 };
 
 // Syncing all the models at once.
-conn.sync({ alter: true }).then(() => {
+conn.sync().then(() => {
   countriesTableLoad();
 
   server.listen(3001, () => {
