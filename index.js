@@ -1,38 +1,38 @@
 const dotnev = require("dotenv");
 const cors = require("cors");
 const server = require("./src/app.js");
-const { conn, Country, Activity } = require("./src/db.js");
+const { conn, Country } = require("./src/db.js");
 const axios = require("axios").default;
 dotnev.config();
 server.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
-const dataInfo = async () => {
+/**LLAMAMOS A LA API */
+const getAll = async () => {
   try {
-    const info = await axios.get("https://restcountries.com/v3/all");
-
-    const data = await info.data.map((res) => {
+    const response = await axios.get("https://restcountries.com/v3/all");
+    const data = await response.data.map((res) => {
       return {
         id: res.cca3,
         name: res.name.common && res.name.common,
-        image: res.flags && res.flags.map((flag) => flag),
+        img: res.flags && res.flags.map((flag) => flag),
         continent: res.continents && res.continents.map((el) => el),
         capital: res.capital ? res.capital.map((el) => el) : ["no data"],
         subregion: res.subregion,
         area: res.area,
         population: res.population,
+        maps: res.maps.googleMaps,
       };
     });
-
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
 const countriesTableLoad = async () => {
-  const countries = await dataInfo();
+  const countries = await getAll();
   countries.map((el) => {
     Country.findOrCreate({
       where: { name: el.name },
@@ -51,15 +51,59 @@ const countriesTableLoad = async () => {
   });
 };
 
+// const dataInfo = async () => {
+//   try {
+//     const info = await axios.get("https://restcountries.com/v3/all");
+
+//     const data = await info.data.map((res) => {
+//       return {
+//         id: res.cca3,
+//         name: res.name.common && res.name.common,
+//         image: res.flags && res.flags.map((flag) => flag),
+//         continent: res.continents && res.continents.map((el) => el),
+//         capital: res.capital ? res.capital.map((el) => el) : ["no data"],
+//         subregion: res.subregion,
+//         area: res.area,
+//         population: res.population,
+//       };
+//     });
+
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// const countriesTableLoad = async () => {
+//   const countries = await dataInfo();
+//   countries.map((el) => {
+//     Country.findOrCreate({
+//       where: { name: el.name },
+//       defaults: {
+//         id: el.id,
+//         name: el.name,
+//         image: el.img,
+//         continent: el.continent,
+//         capital: el.capital,
+//         subregion: el.subregion,
+//         area: el.area,
+//         population: el.population,
+//         maps: el.maps,
+//       },
+//     });
+//   });
+// };
+
 // Syncing all the models at once.
 conn.sync().then(() => {
   countriesTableLoad();
 
-  server.listen(3001, () => {
+  server.listen(PORT, () => {
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
 });
 
+// conn.sync({alter:true})
 // (async () => {
 //   await conn.sync({ force: true })
 
