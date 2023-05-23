@@ -8,10 +8,26 @@ server.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
+const options = {
+  method: "GET",
+  url: "https://rest-country-api.p.rapidapi.com/",
+  headers: {
+    "X-RapidAPI-Key": "5324481b2cmsh9151d9a362f484ep1b9e9cjsn4333ae2a9d69",
+    "X-RapidAPI-Host": "rest-country-api.p.rapidapi.com",
+  },
+};
+
+// try {
+//   const response = await axios.request(options);
+//   console.log(response.data);
+// } catch (error) {
+//   console.error(error);
+// }
+
 /**LLAMAMOS A LA API */
 const getAll = async () => {
   try {
-    const response = await axios.get("https://restcountries.com/v3/all");
+    const response = await axios.request(options);
     const data = await response.data.map((res) => {
       return {
         id: res.cca3,
