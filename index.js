@@ -17,8 +17,6 @@ const options = {
   },
 };
 
-
-
 /**LLAMAMOS A LA API */
 const getAll = async () => {
   try {
@@ -33,7 +31,7 @@ const getAll = async () => {
         subregion: res.subregion,
         area: res.area,
         population: res.population,
-        maps: res.maps.googleMaps,
+        // maps: res.maps.googleMaps,
       };
     });
     return data;
@@ -56,20 +54,17 @@ const countriesTableLoad = async () => {
         subregion: el.subregion,
         area: el.area,
         population: el.population,
-        maps: el.maps,
+        // maps: el.maps,
       },
     });
   });
 };
 
-
 // Syncing all the models at once.
-conn.sync().then(() => {
+conn.sync({ alter: true }).then(() => {
   countriesTableLoad();
 
   server.listen(PORT, () => {
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
 });
-
-

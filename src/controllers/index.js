@@ -11,9 +11,7 @@ module.exports = {
           name: { [Op.iLike]: `%${name}%` },
         },
       });
-      country
-        .then((data) => res.status(200).json(data))
-        .catch((err) => res.status(404).json("no countries found", err));
+      country.then((data) => res.status(200).json(data)).catch((err) => res.status(404).json("no countries found", err));
     } else {
       let data = Country.findAll({
         include: {
@@ -24,11 +22,40 @@ module.exports = {
           },
         },
       });
-      data
-        .then((aux) => res.status(200).json(aux))
-        .catch((err) => res.status(404).json("not countries found", err));
+      data.then((aux) => res.status(200).json(aux)).catch((err) => res.status(404).json("not countries found", err));
     }
   },
+  // Función creada por chatgpt..
+  /*getAll: async function (req, res, next) {
+    try {
+      const { name } = req.query;
+      let data;
+
+      if (name) {
+        data = await Country.findAll({
+          include: Activity,
+          where: {
+            name: { [Op.iLike]: `%${name}%` },
+          },
+        });
+      } else {
+        data = await Country.findAll({
+          include: {
+            model: Activity,
+            attributes: ["name", "difficulty", "duration", "season"],
+            through: {
+              attributes: [],
+            },
+          },
+        });
+      }
+
+      return res.status(200).json(data);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "An error occurred" });
+    }
+  },*/
 
   getById: function (req, res, next) {
     let newId = req.params.id;
@@ -39,9 +66,7 @@ module.exports = {
           id: { [Op.iLike]: `%${newId}%` },
         },
       });
-      data
-        .then((aux) => res.status(200).json(aux))
-        .catch((err) => res.status(404).json("not country found", err));
+      data.then((aux) => res.status(200).json(aux)).catch((err) => res.status(404).json("not country found", err));
     } else {
       console.log("not country found");
       next(err);
