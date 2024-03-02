@@ -1,3 +1,4 @@
+const api = require("./src/api_global_restcountries.json");
 const dotnev = require("dotenv");
 const cors = require("cors");
 const server = require("./src/app.js");
@@ -8,21 +9,12 @@ server.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
-// const options = {
-//   method: "GET",
-//   url: "https://rest-country-api.p.rapidapi.com/",
-//   headers: {
-//     "X-RapidAPI-Key": "5324481b2cmsh9151d9a362f484ep1b9e9cjsn4333ae2a9d69",
-//     "X-RapidAPI-Host": "rest-country-api.p.rapidapi.com",
-//   },
-// };
-
 /**LLAMAMOS A LA API */
 const getAll = async () => {
   try {
-    //const response = await axios.request(options);
-    const response = await axios("https://restcountries.com/v3.1/all/");
-    const data = await response.data.map((res) => {
+    // const response = await axios("https://restcountries.com/v3.1/all/");
+    // const data = await response.data.map((res) => {
+    const data = api.map((res) => {
       return {
         id: res.cca3,
         name: res.name.common && res.name.common,
