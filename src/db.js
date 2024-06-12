@@ -11,15 +11,21 @@ let config = {
   native: false,
 };
 if (process.env.DATABASE_URL) {
+  const sslEnabled = process.env.SSL || 'false';
+
   config = {
     ...config,
     dialect: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
+    dialectOptions: sslEnabled
+      ? {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        }
+      : {
+          ssl: false,
+        },
   };
 }
 

@@ -1,32 +1,37 @@
-const api = require("./src/api_global_restcountries.json");
-const dotnev = require("dotenv");
-const cors = require("cors");
-const server = require("./src/app.js");
-const { conn, Country } = require("./src/db.js");
-const axios = require("axios").default;
-dotnev.config();
-server.use(cors());
+const api = require('./src/api_global_restcountries.json')
+const dotnev = require('dotenv')
+const cors = require('cors')
+const server = require('./src/app.js')
+const { conn, Country } = require('./src/db.js')
+const axios = require('axios').default
+dotnev.config()
+server.use(cors())
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
 /**LLAMAMOS A LA API */
 const getAll = async () => {
   try {
-    // const response = await axios("https://restcountries.com/v3.1/all/");
-    // const data = await response.data.map((res) => {
-    const data = api.map((res) => {
+    let response;
+    try {
+      response = await axios("https://restcountries.com/v3.1/all/");
+    } catch (err) {
+      console.log("Error al obtener datos de la API, utilizando datos locales:", err.message);
+    }
+
+    const data = (response && response.data ? response.data : api).map((res) => {
       return {
         id: res.cca3,
-        name: res.name.common && res.name.common,
-        //img: res.flags && res.flags.map((flag) => flag),
+        name: res.name.common,
         img: res.flags && res.flags.png,
-        continent: res.continents && res.continents.map((el) => el),
-        capital: res.capital ? res.capital.map((el) => el) : ["no data"],
+        continent: res.continents ? res.continents : ['no data'],
+        capital: res.capital ? res.capital : ['no data'],
         subregion: res.subregion,
         area: res.area,
-        population: res.population,
+        population: res.population
       };
     });
+
     return data;
   } catch (err) {
     console.log(err);
@@ -34,8 +39,8 @@ const getAll = async () => {
 };
 
 const countriesTableLoad = async () => {
-  const countries = await getAll();
-  countries.map((el) => {
+  const countries = await getAll()
+  countries.map(el => {
     Country.findOrCreate({
       where: { name: el.name },
       defaults: {
@@ -46,17 +51,17 @@ const countriesTableLoad = async () => {
         capital: el.capital,
         subregion: el.subregion,
         area: el.area,
-        population: el.population,
-      },
-    });
-  });
-};
+        population: el.population
+      }
+    })
+  })
+}
 
 // Syncing all the models at once.
 conn.sync({ alter: true }).then(() => {
-  countriesTableLoad();
+  countriesTableLoad()
 
   server.listen(PORT, () => {
-    console.log("%s listening at 3001"); // eslint-disable-line no-console
-  });
-});
+    console.log('%s listening at 3001') // eslint-disable-line no-console
+  })
+})
