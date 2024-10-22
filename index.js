@@ -7,7 +7,7 @@ const axios = require('axios').default
 dotnev.config()
 server.use(cors())
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4000
 
 /**LLAMAMOS A LA API */
 const getAll = async () => {
