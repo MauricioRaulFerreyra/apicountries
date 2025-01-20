@@ -4,57 +4,53 @@ const cors = require('cors')
 const server = require('./src/app.js')
 const { conn, Country } = require('./src/db.js')
 const axios = require('axios').default
+
 dotnev.config()
 server.use(cors())
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 4000
 
-/**LLAMAMOS A LA API */
 const getAll = async () => {
   try {
     let response;
-    const axiosConfig = {
-      timeout: 5000, // Timeout de 5 segundo
-      timeout: 10000, // Aumentamos el timeout a 10 segundos
-      maxContentLength: Infinity, // Permitir cualquier tamaño de respuesta
-      maxBodyLength: Infinity,
-      headers: {
-        'Accept': 'application/json',
-        'Connection': 'keep-alive'
-      }
-    };
-
     try {
-      response = await axios.get("https://restcountries.com/v3.1/all", axiosConfig);
+      response = await axios("https://restcountries.com/v3.1/all");
+      console.log("Datos obtenidos exitosamente de la API");
     } catch (err) {
       console.log("Error al obtener datos de la API, utilizando datos locales:", err.message);
-      return api.map(formatCountryData); // Usar datos locales si falla la API
     }
 
-    return response.data.map(formatCountryData);
+    // Aquí está la clave: usamos los datos de la API si existen, si no, usamos api local
+    const data = (response && response.data ? response.data : api).map((res) => {
+      return {
+        id: res.cca3,
+        name: res.name.common,
+        img: res.flags && res.flags.png,
+        continent: res.continents ? res.continents : ['no data'],
+        capital: res.capital ? res.capital : ['no data'],
+        subregion: res.subregion,
+        area: res.area,
+        population: res.population
+      };
+    });
+
+    return data;
   } catch (err) {
-    console.error("Error en getAll:", err);
-    throw err; // Propagar el error para manejarlo en countriesTableLoad
+    console.log("Error en getAll:", err);
+    return []; // Por si falla incluso el procesamiento de los datos locales
   }
 };
-
-// Función auxiliar para formatear los datos del país
-const formatCountryData = (res) => ({
-  id: res.cca3,
-  name: res.name.common,
-  img: res.flags?.png,
-  continent: res.continents || ['no data'],
-  capital: res.capital || ['no data'],
-  subregion: res.subregion,
-  area: res.area,
-  population: res.population
-});
 
 const countriesTableLoad = async () => {
   try {
     const countries = await getAll();
-    const promises = countries.map(el => 
-      Country.findOrCreate({
+    if (!countries || countries.length === 0) {
+      console.log('No se pudieron obtener países para cargar');
+      return;
+    }
+
+    await Promise.all(countries.map(el => {
+      return Country.findOrCreate({
         where: { name: el.name },
         defaults: {
           id: el.id,
@@ -66,22 +62,19 @@ const countriesTableLoad = async () => {
           area: el.area,
           population: el.population
         }
-      })
-    );
-    
-    await Promise.all(promises);
+      });
+    }));
     console.log('Países cargados exitosamente en la base de datos');
   } catch (err) {
-    console.error('Error al cargar países en la base de datos:', err);
+    console.log('Error al cargar países en la base de datos:', err);
   }
-};
+}
 
-// Syncing all the models at once.
 conn.sync({ alter: true }).then(() => {
   countriesTableLoad();
   server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
   });
 }).catch(err => {
-  console.error('Error al iniciar el servidor:', err);
+  console.log('Error al iniciar el servidor:', err);
 });
