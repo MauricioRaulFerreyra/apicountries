@@ -7,14 +7,17 @@ const axios = require('axios').default
 dotnev.config()
 server.use(cors())
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 3001
 
 /**LLAMAMOS A LA API */
 const getAll = async () => {
   try {
     let response;
     const axiosConfig = {
-      timeout: 5000, // Timeout de 5 segundos
+      timeout: 5000, // Timeout de 5 segundo
+      timeout: 10000, // Aumentamos el timeout a 10 segundos
+      maxContentLength: Infinity, // Permitir cualquier tamaño de respuesta
+      maxBodyLength: Infinity,
       headers: {
         'Accept': 'application/json',
         'Connection': 'keep-alive'
@@ -75,9 +78,10 @@ const countriesTableLoad = async () => {
 
 // Syncing all the models at once.
 conn.sync({ alter: true }).then(() => {
-  countriesTableLoad()
-
+  countriesTableLoad();
   server.listen(PORT, () => {
-    console.log('%s listening at 3001') // eslint-disable-line no-console
-  })
-})
+    console.log(`Server listening on port ${PORT}`);
+  });
+}).catch(err => {
+  console.error('Error al iniciar el servidor:', err);
+});
