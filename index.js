@@ -10,8 +10,8 @@ server.use(cors())
 
 const PORT = process.env.PORT || 4000
 
-axios.defaults.maxContentLength = 500 * 1024 * 1024; // 100 MB
-axios.defaults.maxBodyLength = 500 * 1024 * 1024;    // 100 MB
+axios.defaults.maxContentLength = 500 * 1024 * 1024; 
+axios.defaults.maxBodyLength = 500 * 1024 * 1024;    
 
 const getAll = async () => {
   try {
