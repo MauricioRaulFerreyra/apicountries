@@ -10,17 +10,12 @@ server.use(cors())
 
 const PORT = process.env.PORT || 4000
 
-// Configuración global de axios
-axios.defaults.maxContentLength = Infinity;
-axios.defaults.maxBodyLength = Infinity;
 
 const getAll = async () => {
   try {
     let response;
     try {
       response = await axios.get("https://restcountries.com/v3.1/all", {
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
         timeout: 15000, // 15 segundos de timeout
         headers: {
           'Accept': 'application/json',
