@@ -12,6 +12,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 
+app.use('/', (req, res) => {
+  res.send('API de países funcionando correctamente');
+});
+
 app.use("/", routes);
 
 module.exports = app;
