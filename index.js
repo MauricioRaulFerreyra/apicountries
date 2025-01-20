@@ -10,16 +10,16 @@ server.use(cors())
 
 const PORT = process.env.PORT || 4000
 
-axios.defaults.maxContentLength = 100 * 1024 * 1024; // 100 MB
-axios.defaults.maxBodyLength = 100 * 1024 * 1024;    // 100 MB
+axios.defaults.maxContentLength = 200 * 1024 * 1024; // 100 MB
+axios.defaults.maxBodyLength = 200 * 1024 * 1024;    // 100 MB
 
 const getAll = async () => {
   try {
     let response;
     try {
       response = await axios.get("https://restcountries.com/v3.1/all", {
-        maxContentLength: 100 * 1024 * 1024,
-        maxBodyLength: 100 * 1024 * 1024,
+        maxContentLength: 200 * 1024 * 1024,
+        maxBodyLength: 200 * 1024 * 1024,
         timeout: 15000,
         headers: {
           'Accept': 'application/json',
